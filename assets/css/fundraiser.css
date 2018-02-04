@@ -1,0 +1,7 @@
+body {
+    background-color: #eee;
+}
+
+tbody, div.alert {
+    background-color: #fff;
+}
