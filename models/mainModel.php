@@ -49,7 +49,7 @@
 
 		function getAllReviews()
 		{
-			$results = $this->_queryDb("SELECT fundraiser_reviews.id, fundraisers.fundraiser_name, reviewers.name, reviewers.email, fundraiser_id, reviewer_id, review, rating, date  FROM fundraiser_reviews INNER JOIN reviewers ON (reviewers.id = fundraiser_reviews.reviewer_id) INNER JOIN fundraisers ON (fundraisers.id = fundraiser_reviews.fundraiser_id) ORDER BY  fundraisers.fundraiser_name ASC, fundraiser_reviews.rating DESC, fundraiser_reviews.date DESC lIMIT 21");
+			$results = $this->_queryDb("SELECT fundraiser_reviews.id, fundraisers.fundraiser_name, fundraiser_reviews.fundraiser_id, AVG(fundraiser_reviews.rating) as rating, MAX(fundraiser_reviews.date) as date FROM fundraiser_reviews INNER JOIN reviewers ON (reviewers.id = fundraiser_reviews.reviewer_id) INNER JOIN fundraisers ON (fundraisers.id = fundraiser_reviews.fundraiser_id) GROUP BY fundraiser_reviews.fundraiser_id ORDER BY rating DESC, fundraisers.fundraiser_name ASC");
 			return $this->_parseResults($results);
 		}
 
@@ -103,7 +103,7 @@
 		{
 			$id = $this->_escapeString($arr['id']);
 			$results = $this->_queryDb("SELECT * FROM fundraiser_reviews INNER JOIN reviewers ON (reviewers.id = fundraiser_reviews.reviewer_id) WHERE fundraiser_id = $id ORDER BY fundraiser_reviews.rating DESC");
-			return $this->_parseResults($results);
+			return $this->_parseResults($results, "getReview");
 		}
 
 		function getReviewerByEmail($email)
@@ -163,7 +163,7 @@
 		/*
 		* Helper function to standardize the response back to the dispatcher
 		*/
-		private function _parseResults($results)
+		private function _parseResults($results, $section = null)
 		{
 			$obj = new stdClass();
 			$obj->data = new stdClass();
@@ -177,13 +177,16 @@
 		          $hash                            = ($result['id']);
 		          $obj->data->$hash                = new stdClass();
 		          $obj->data->$hash->id            = $result['id'];
-		          $obj->data->$hash->fundraiserId = $result['fundraiser_id'];
-		          $obj->data->$hash->reviewerId   = $result['reviewer_id'];
-		          $obj->data->$hash->review        = $result['review'];
+		          $obj->data->$hash->fundraiserId  = $result['fundraiser_id'];
 		          $obj->data->$hash->rating        = $result['rating'];
 		          $obj->data->$hash->date          = $result['date'];
-		          $obj->data->$hash->reviewerName  = $result['name'];
-		          $obj->data->$hash->reviewerEmail = $result['email'];
+				  if($section === "getReview")
+				  {
+					  $obj->data->$hash->review        = $result['review'];
+					  $obj->data->$hash->reviewerId    = $result['reviewer_id'];
+					  $obj->data->$hash->reviewerName  = $result['name'];
+					  $obj->data->$hash->reviewerEmail = $result['email'];
+				  }
 				  if(!empty($result["fundraiser_name"]))
 				  {
 					  $obj->data->$hash->fundraiserName = $result['fundraiser_name'];

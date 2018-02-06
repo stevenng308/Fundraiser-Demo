@@ -37,22 +37,20 @@
 		<table class="table table-bordered table-striped table-hover">
             <thead>
                 <th>Fundraisers</th>
-                <th>Rating</th>
-                <th>Reviewed By</th>
-                <th>Date</th>
+                <th>Average Rating</th>
+                <th>Last Updated</th>
             </thead>
             <tbody>
                 <?php if($reviews['count'] > 0)
 				{
 					foreach($reviews['data'] as $review){
-					$formatDate = new Datetime($review["date"]);
-					$badgeColor = ($review["rating"] < 3) ? "badge-info" : "badge-primary";
+					$formatDate   = new Datetime($review["date"]);
+					$badgeColor   = ($review["rating"] < 3) ? "badge-info" : "badge-primary";
 					$fundName     = htmlentities($review["fundraiserName"]);
-					$reviewerName = htmlentities($review["reviewerName"]);
+					$reviewRating = round($review["rating"], 1);
                     echo "<tr>
                             <td><a href='/controllers/mainController.php/viewFundraiser/{$review['fundraiserId']}'>{$fundName}</a></td>
-                            <td><span class='badge {$badgeColor}'>{$review["rating"]} <i class='fa fa-star'></i></span></td>
-                            <td>{$reviewerName}</td>
+                            <td><span class='badge {$badgeColor}'>{$reviewRating} <i class='fa fa-star'></i></span></td>
                             <td>{$formatDate->format("M d, Y")}</td>
                         </tr>";
                 	};
