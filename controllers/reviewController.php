@@ -5,12 +5,12 @@
 	*
 	*/
 	class Review
-    {
+    	{
 		private $dispatch = null;
 		function __construct()
-        {
+        	{
 			$this->dispatch = new Dispatcher();
-        }
+        	}
 
 		function getAllReviews($reviews)
 		{
@@ -18,7 +18,7 @@
 		}
 
 		function checkSubmitReview(&$params)
-        {
+        	{
 			$foundFundraiser  = $this->_checkFundraiserExists($params);
 			$foundExistReview = false;
 			if($params['fundraiser_id'] === "new")
@@ -41,19 +41,19 @@
 			} else {
 				return $this->_checkFormData($params);
 			}
-        }
+        	}
 
-        function viewFundraiser($fundraiserInfo, $reviews)
-        {
-			$reviews                    = json_decode($reviews, true);
-			$fundraiserInfo             = json_decode($fundraiserInfo, true);
-			if($fundraiserInfo["count"] > 0)
-			{
-				$reviews["fundraiserName"] = $fundraiserInfo["data"]["fundraiser_name"]; //enrich with fundraiser details with its reviews
-				$reviews["fundraiserId"]   = $fundraiserInfo["data"]["id"];
-			}
-			return $reviews;
-        }
+		function viewFundraiser($fundraiserInfo, $reviews)
+		{
+				$reviews                    = json_decode($reviews, true);
+				$fundraiserInfo             = json_decode($fundraiserInfo, true);
+				if($fundraiserInfo["count"] > 0)
+				{
+					$reviews["fundraiserName"] = $fundraiserInfo["data"]["fundraiser_name"]; //enrich with fundraiser details with its reviews
+					$reviews["fundraiserId"]   = $fundraiserInfo["data"]["id"];
+				}
+				return $reviews;
+		}
 
 		function _checkDuplicateReview($params)
 		{
@@ -89,20 +89,20 @@
 					switch($label)
 					{
 						case "name":
-	                        $flag = $this->_validateLength($data, 50);
-	                        break;
-	                    case "email":
-	                        $flag = $this->_validateLength($data, 50);
-	                        break;
-	                    case "rating":
-	                        $flag = $this->_validateLength($data, 1);
-	                        break;
-	                    case "message":
-	                        $flag = $this->_validateLength($data, 500);
-	                        break;
-	                    case "fundraiser_name":
-	                        $flag = $this->_validateLength($data, 50);
-	                        break;
+						$flag = $this->_validateLength($data, 50);
+						break;
+					    case "email":
+						$flag = $this->_validateLength($data, 50);
+						break;
+					    case "rating":
+						$flag = $this->_validateLength($data, 1);
+						break;
+					    case "message":
+						$flag = $this->_validateLength($data, 500);
+						break;
+					    case "fundraiser_name":
+						$flag = $this->_validateLength($data, 50);
+						break;
 						default:
 							$flag = true;
 							break;
@@ -129,19 +129,19 @@
 		}
 
 		function _validateEmail($email)
-	    {
-	       $regex = "/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/";
-	        return preg_match($regex, mb_strtolower($email));
-	    }
+		{
+			$regex = "/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/";
+			return preg_match($regex, mb_strtolower($email));
+		}
 
-	    function _validateRating($num)
-	    {
-	        $regex = "/([1-5])/";
-	        return preg_match($regex, $num);
-	    }
+		function _validateRating($num)
+		{
+			$regex = "/([1-5])/";
+			return preg_match($regex, $num);
+		}
 
-	    function _validateLength($str, $length)
-	    {
-	        return (strlen($str) <= $length) ? true : false;
-	    }
-    }
+		function _validateLength($str, $length)
+		{
+			return (strlen($str) <= $length) ? true : false;
+		}
+    	}
